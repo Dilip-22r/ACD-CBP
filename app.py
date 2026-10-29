@@ -2758,10 +2758,6 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
                         <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 8.5l7 7"/></svg>
                         Call Graph
                     </button>
-                    <button id="btnTabWam" class="tab-button" role="tab" aria-selected="false" aria-controls="tab-wam" data-pane="tab-wam" onclick="switchTab('tab-wam')">
-                        <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                        WAM & TAC
-                    </button>
                     <button id="btnTabDemo" class="tab-button" role="tab" aria-selected="false" aria-controls="tab-demo" data-pane="tab-demo" onclick="switchTab('tab-demo')">
                         <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         Live Demo
@@ -2837,37 +2833,7 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
                         </div>
                     </div>
 
-                    <!-- TAB 4: WAM & TAC -->
-                    <div id="tab-wam" class="tab-panel" role="tabpanel" aria-labelledby="btnTabWam">
-                        <div class="wam-split-view">
-                            <div class="wam-view">
-                                <div class="card-topbar">
-                                    <span class="card-title">Warren Abstract Machine bytecode</span>
-                                    <div style="display:flex;align-items:center;gap:6px;">
-                                        <div class="seg-toggle" role="group" aria-label="Bytecode variant">
-                                            <button id="segOrig" class="seg-btn on" onclick="selectWamView('orig', this)">Original</button>
-                                            <button id="segOpt" class="seg-btn" onclick="selectWamView('opt', this)">Optimized</button>
-                                        </div>
-                                        <button class="icon-btn" onclick="copyWam()" title="Copy to clipboard" aria-label="Copy WAM bytecode to clipboard">
-                                            <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="wamInstructionsBox" class="wam-code-panel"><span style="color:var(--text-3)">-</span></div>
-                            </div>
-                            <div class="wam-view">
-                                <div class="card-topbar">
-                                    <span class="card-title">Three-address code (quadruples)</span>
-                                    <button class="icon-btn" onclick="copyTac()" title="Copy to clipboard" aria-label="Copy TAC to clipboard">
-                                        <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
-                                    </button>
-                                </div>
-                                <div id="tacQuadruplesBox" class="wam-code-panel"><span style="color:var(--text-3)">-</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 5: LIVE DEMO -->
+                    <!-- TAB 4: LIVE DEMO -->
                     <div id="tab-demo" class="tab-panel" role="tabpanel" aria-labelledby="btnTabDemo">
                         <div class="demo-player-container">
                             <div class="demo-hero-banner">
@@ -3817,42 +3783,49 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
 
         /* ================= WAM + TAC RENDERERS ================= */
         function renderWamTac(data) {
-            const wam = data.wam || {};
+            const box = document.getElementById('wamInstructionsBox');
+            const tac = document.getElementById('tacQuadruplesBox');
+            if (!box && !tac) return;
+            const wam = (data && data.wam) || {};
             const list = wamViewMode === 'opt'
                 ? (wam.optimized_wam && wam.optimized_wam.length ? wam.optimized_wam : wam.wam_instructions || [])
                 : (wam.wam_instructions || []);
-            const box = document.getElementById('wamInstructionsBox');
-            if (!list.length) {
-                box.innerHTML = '<span style="color:var(--text-3)">No WAM instructions — resolve syntax errors first.</span>';
-            } else {
-                box.innerHTML = list.map((ins, i) => {
-                    const args = (ins.args || []).join(', ');
-                    const cmt = ins.comment ? '<span class="op-label">; ' + escapeHtml(ins.comment) + '</span>' : '';
-                    return '<div class="wln"><span class="lnum">' + String(i + 1).padStart(2, '0') + '</span>'
-                        + '<div><span class="op-main">' + escapeHtml(ins.op) + '</span>'
-                        + (args ? ' <span class="op-args">' + escapeHtml(args) + '</span>' : '')
-                        + (cmt ? ' ' + cmt : '') + '</div></div>';
-                }).join('');
+            if (box) {
+                if (!list.length) {
+                    box.innerHTML = '<span style="color:var(--text-3)">No WAM instructions — resolve syntax errors first.</span>';
+                } else {
+                    box.innerHTML = list.map((ins, i) => {
+                        const args = (ins.args || []).join(', ');
+                        const cmt = ins.comment ? '<span class="op-label">; ' + escapeHtml(ins.comment) + '</span>' : '';
+                        return '<div class="wln"><span class="lnum">' + String(i + 1).padStart(2, '0') + '</span>'
+                            + '<div><span class="op-main">' + escapeHtml(ins.op) + '</span>'
+                            + (args ? ' <span class="op-args">' + escapeHtml(args) + '</span>' : '')
+                            + (cmt ? ' ' + cmt : '') + '</div></div>';
+                    }).join('');
+                }
             }
 
             const quads = wam.quadruples || [];
-            const tac = document.getElementById('tacQuadruplesBox');
-            if (!quads.length) {
-                tac.innerHTML = '<span style="color:var(--text-3)">No quadruples generated.</span>';
-            } else {
-                tac.innerHTML = quads.map((q, i) =>
-                    '<div class="wln"><span class="tac-idx">' + String(i + 1).padStart(2, '0') + '.</span>'
-                    + '<div><span class="tac-op">(' + escapeHtml(q.op) + '</span>'
-                    + '<span style="color:var(--text-2)">, ' + escapeHtml(q.arg1) + ', ' + escapeHtml(q.arg2) + ', </span>'
-                    + '<span class="tac-res">' + escapeHtml(q.result) + ')</span></div></div>'
-                ).join('');
+            if (tac) {
+                if (!quads.length) {
+                    tac.innerHTML = '<span style="color:var(--text-3)">No quadruples generated.</span>';
+                } else {
+                    tac.innerHTML = quads.map((q, i) =>
+                        '<div class="wln"><span class="tac-idx">' + String(i + 1).padStart(2, '0') + '.</span>'
+                        + '<div><span class="tac-op">(' + escapeHtml(q.op) + '</span>'
+                        + '<span style="color:var(--text-2)">, ' + escapeHtml(q.arg1) + ', ' + escapeHtml(q.arg2) + ', </span>'
+                        + '<span class="tac-res">' + escapeHtml(q.result) + ')</span></div></div>'
+                    ).join('');
+                }
             }
         }
 
         function selectWamView(mode, btn) {
             wamViewMode = mode;
-            document.getElementById('segOrig').classList.toggle('on', mode === 'orig');
-            document.getElementById('segOpt').classList.toggle('on', mode === 'opt');
+            const segOrig = document.getElementById('segOrig');
+            const segOpt = document.getElementById('segOpt');
+            if (segOrig) segOrig.classList.toggle('on', mode === 'orig');
+            if (segOpt) segOpt.classList.toggle('on', mode === 'opt');
             if (currentCompiledData) renderWamTac(currentCompiledData);
         }
 
