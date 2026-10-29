@@ -1,0 +1,1771 @@
+State 13 conflicts: 1 reduce/reduce
+State 101 conflicts: 1 reduce/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: clause_list
+    2        | /* empty */
+
+    3 clause_list: clause_list clause
+    4            | clause
+
+    5 clause: fact
+    6       | rule
+    7       | query
+    8       | directive
+
+    9 fact: head DOT
+
+   10 rule: head NECK body DOT
+
+   11 query: QUERY_PREFIX body DOT
+
+   12 directive: NECK body DOT
+
+   13 head: ATOM
+   14     | ATOM LPAREN arg_list RPAREN
+
+   15 body: goal_list
+
+   16 goal_list: goal_list COMMA goal
+   17          | goal_list SEMICOLON goal
+   18          | goal
+
+   19 goal: simple_goal
+   20     | comparison_expr
+   21     | arithmetic_expr
+   22     | CUT
+   23     | NOT_OP goal
+   24     | LPAREN goal_list RPAREN
+   25     | LPAREN goal ARROW goal SEMICOLON goal RPAREN
+
+   26 simple_goal: ATOM
+   27            | ATOM LPAREN arg_list RPAREN
+
+   28 comparison_expr: term OP_UNIFY term
+   29                | term OP_NOT_UNIFY term
+   30                | term OP_STRICT_EQ term
+   31                | term OP_STRICT_NEQ term
+   32                | term OP_LT term
+   33                | term OP_GT term
+   34                | term OP_LE term
+   35                | term OP_GE term
+
+   36 arithmetic_expr: term OP_IS term
+
+   37 term: ATOM
+   38     | VARIABLE
+   39     | ANON_VAR
+   40     | NUMBER
+   41     | STRING
+   42     | compound_term
+   43     | list_term
+   44     | term PLUS term
+   45     | term MINUS term
+   46     | term MULT term
+   47     | term DIV term
+   48     | term IDIV term
+   49     | term MOD term
+   50     | term POWER term
+   51     | MINUS term
+   52     | LPAREN term RPAREN
+
+   53 compound_term: ATOM LPAREN arg_list RPAREN
+
+   54 list_term: LBRACKET RBRACKET
+   55          | LBRACKET arg_list RBRACKET
+   56          | LBRACKET arg_list PIPE term RBRACKET
+
+   57 arg_list: arg_list COMMA term
+   58         | term
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+ATOM (258) 13 14 26 27 37 53
+VARIABLE (259) 38
+ANON_VAR (260) 39
+NUMBER (261) 40
+STRING (262) 41
+NECK (263) 10 12
+QUERY_PREFIX (264) 11
+DOT (265) 9 10 11 12
+COMMA (266) 16 57
+SEMICOLON (267) 17 25
+LPAREN (268) 14 24 25 27 52 53
+RPAREN (269) 14 24 25 27 52 53
+LBRACKET (270) 54 55 56
+RBRACKET (271) 54 55 56
+PIPE (272) 56
+CUT (273) 22
+OP_IS (274) 36
+OP_UNIFY (275) 28
+OP_NOT_UNIFY (276) 29
+OP_STRICT_EQ (277) 30
+OP_STRICT_NEQ (278) 31
+OP_LT (279) 32
+OP_GT (280) 33
+OP_LE (281) 34
+OP_GE (282) 35
+PLUS (283) 44
+MINUS (284) 45 51
+MULT (285) 46
+DIV (286) 47
+IDIV (287) 48
+MOD (288) 49
+POWER (289) 50
+ARROW (290) 25
+NOT_OP (291) 23
+UMINUS (292)
+
+
+Nonterminals, with rules where they appear
+
+$accept (38)
+    on left: 0
+program (39)
+    on left: 1 2, on right: 0
+clause_list (40)
+    on left: 3 4, on right: 1 3
+clause (41)
+    on left: 5 6 7 8, on right: 3 4
+fact (42)
+    on left: 9, on right: 5
+rule (43)
+    on left: 10, on right: 6
+query (44)
+    on left: 11, on right: 7
+directive (45)
+    on left: 12, on right: 8
+head (46)
+    on left: 13 14, on right: 9 10
+body (47)
+    on left: 15, on right: 10 11 12
+goal_list (48)
+    on left: 16 17 18, on right: 15 16 17 24
+goal (49)
+    on left: 19 20 21 22 23 24 25, on right: 16 17 18 23 25
+simple_goal (50)
+    on left: 26 27, on right: 19
+comparison_expr (51)
+    on left: 28 29 30 31 32 33 34 35, on right: 20
+arithmetic_expr (52)
+    on left: 36, on right: 21
+term (53)
+    on left: 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52, on right:
+    28 29 30 31 32 33 34 35 36 44 45 46 47 48 49 50 51 52 56 57 58
+compound_term (54)
+    on left: 53, on right: 42
+list_term (55)
+    on left: 54 55 56, on right: 43
+arg_list (56)
+    on left: 57 58, on right: 14 27 53 55 56 57
+
+
+state 0
+
+    0 $accept: . program $end
+
+    ATOM          shift, and go to state 1
+    NECK          shift, and go to state 2
+    QUERY_PREFIX  shift, and go to state 3
+
+    $default  reduce using rule 2 (program)
+
+    program      go to state 4
+    clause_list  go to state 5
+    clause       go to state 6
+    fact         go to state 7
+    rule         go to state 8
+    query        go to state 9
+    directive    go to state 10
+    head         go to state 11
+
+
+state 1
+
+   13 head: ATOM .
+   14     | ATOM . LPAREN arg_list RPAREN
+
+    LPAREN  shift, and go to state 12
+
+    $default  reduce using rule 13 (head)
+
+
+state 2
+
+   12 directive: NECK . body DOT
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    body             go to state 23
+    goal_list        go to state 24
+    goal             go to state 25
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 3
+
+   11 query: QUERY_PREFIX . body DOT
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    body             go to state 32
+    goal_list        go to state 24
+    goal             go to state 25
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 4
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 33
+
+
+state 5
+
+    1 program: clause_list .
+    3 clause_list: clause_list . clause
+
+    ATOM          shift, and go to state 1
+    NECK          shift, and go to state 2
+    QUERY_PREFIX  shift, and go to state 3
+
+    $default  reduce using rule 1 (program)
+
+    clause     go to state 34
+    fact       go to state 7
+    rule       go to state 8
+    query      go to state 9
+    directive  go to state 10
+    head       go to state 11
+
+
+state 6
+
+    4 clause_list: clause .
+
+    $default  reduce using rule 4 (clause_list)
+
+
+state 7
+
+    5 clause: fact .
+
+    $default  reduce using rule 5 (clause)
+
+
+state 8
+
+    6 clause: rule .
+
+    $default  reduce using rule 6 (clause)
+
+
+state 9
+
+    7 clause: query .
+
+    $default  reduce using rule 7 (clause)
+
+
+state 10
+
+    8 clause: directive .
+
+    $default  reduce using rule 8 (clause)
+
+
+state 11
+
+    9 fact: head . DOT
+   10 rule: head . NECK body DOT
+
+    NECK  shift, and go to state 35
+    DOT   shift, and go to state 36
+
+
+state 12
+
+   14 head: ATOM LPAREN . arg_list RPAREN
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 39
+    compound_term  go to state 30
+    list_term      go to state 31
+    arg_list       go to state 40
+
+
+state 13
+
+   26 simple_goal: ATOM .
+   27            | ATOM . LPAREN arg_list RPAREN
+   37 term: ATOM .
+   53 compound_term: ATOM . LPAREN arg_list RPAREN
+
+    LPAREN  shift, and go to state 41
+
+    DOT        reduce using rule 26 (simple_goal)
+    COMMA      reduce using rule 26 (simple_goal)
+    SEMICOLON  reduce using rule 26 (simple_goal)
+    RPAREN     reduce using rule 26 (simple_goal)
+    RPAREN     [reduce using rule 37 (term)]
+    ARROW      reduce using rule 26 (simple_goal)
+    $default   reduce using rule 37 (term)
+
+
+state 14
+
+   38 term: VARIABLE .
+
+    $default  reduce using rule 38 (term)
+
+
+state 15
+
+   39 term: ANON_VAR .
+
+    $default  reduce using rule 39 (term)
+
+
+state 16
+
+   40 term: NUMBER .
+
+    $default  reduce using rule 40 (term)
+
+
+state 17
+
+   41 term: STRING .
+
+    $default  reduce using rule 41 (term)
+
+
+state 18
+
+   24 goal: LPAREN . goal_list RPAREN
+   25     | LPAREN . goal ARROW goal SEMICOLON goal RPAREN
+   52 term: LPAREN . term RPAREN
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal_list        go to state 42
+    goal             go to state 43
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 44
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 19
+
+   54 list_term: LBRACKET . RBRACKET
+   55          | LBRACKET . arg_list RBRACKET
+   56          | LBRACKET . arg_list PIPE term RBRACKET
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    RBRACKET  shift, and go to state 45
+    MINUS     shift, and go to state 21
+
+    term           go to state 39
+    compound_term  go to state 30
+    list_term      go to state 31
+    arg_list       go to state 46
+
+
+state 20
+
+   22 goal: CUT .
+
+    $default  reduce using rule 22 (goal)
+
+
+state 21
+
+   51 term: MINUS . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 47
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 22
+
+   23 goal: NOT_OP . goal
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal             go to state 48
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 23
+
+   12 directive: NECK body . DOT
+
+    DOT  shift, and go to state 49
+
+
+state 24
+
+   15 body: goal_list .
+   16 goal_list: goal_list . COMMA goal
+   17          | goal_list . SEMICOLON goal
+
+    COMMA      shift, and go to state 50
+    SEMICOLON  shift, and go to state 51
+
+    $default  reduce using rule 15 (body)
+
+
+state 25
+
+   18 goal_list: goal .
+
+    $default  reduce using rule 18 (goal_list)
+
+
+state 26
+
+   19 goal: simple_goal .
+
+    $default  reduce using rule 19 (goal)
+
+
+state 27
+
+   20 goal: comparison_expr .
+
+    $default  reduce using rule 20 (goal)
+
+
+state 28
+
+   21 goal: arithmetic_expr .
+
+    $default  reduce using rule 21 (goal)
+
+
+state 29
+
+   28 comparison_expr: term . OP_UNIFY term
+   29                | term . OP_NOT_UNIFY term
+   30                | term . OP_STRICT_EQ term
+   31                | term . OP_STRICT_NEQ term
+   32                | term . OP_LT term
+   33                | term . OP_GT term
+   34                | term . OP_LE term
+   35                | term . OP_GE term
+   36 arithmetic_expr: term . OP_IS term
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    OP_IS          shift, and go to state 52
+    OP_UNIFY       shift, and go to state 53
+    OP_NOT_UNIFY   shift, and go to state 54
+    OP_STRICT_EQ   shift, and go to state 55
+    OP_STRICT_NEQ  shift, and go to state 56
+    OP_LT          shift, and go to state 57
+    OP_GT          shift, and go to state 58
+    OP_LE          shift, and go to state 59
+    OP_GE          shift, and go to state 60
+    PLUS           shift, and go to state 61
+    MINUS          shift, and go to state 62
+    MULT           shift, and go to state 63
+    DIV            shift, and go to state 64
+    IDIV           shift, and go to state 65
+    MOD            shift, and go to state 66
+    POWER          shift, and go to state 67
+
+
+state 30
+
+   42 term: compound_term .
+
+    $default  reduce using rule 42 (term)
+
+
+state 31
+
+   43 term: list_term .
+
+    $default  reduce using rule 43 (term)
+
+
+state 32
+
+   11 query: QUERY_PREFIX body . DOT
+
+    DOT  shift, and go to state 68
+
+
+state 33
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 34
+
+    3 clause_list: clause_list clause .
+
+    $default  reduce using rule 3 (clause_list)
+
+
+state 35
+
+   10 rule: head NECK . body DOT
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    body             go to state 69
+    goal_list        go to state 24
+    goal             go to state 25
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 36
+
+    9 fact: head DOT .
+
+    $default  reduce using rule 9 (fact)
+
+
+state 37
+
+   37 term: ATOM .
+   53 compound_term: ATOM . LPAREN arg_list RPAREN
+
+    LPAREN  shift, and go to state 70
+
+    $default  reduce using rule 37 (term)
+
+
+state 38
+
+   52 term: LPAREN . term RPAREN
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 71
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 39
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   58 arg_list: term .
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 58 (arg_list)
+
+
+state 40
+
+   14 head: ATOM LPAREN arg_list . RPAREN
+   57 arg_list: arg_list . COMMA term
+
+    COMMA   shift, and go to state 72
+    RPAREN  shift, and go to state 73
+
+
+state 41
+
+   27 simple_goal: ATOM LPAREN . arg_list RPAREN
+   53 compound_term: ATOM LPAREN . arg_list RPAREN
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 39
+    compound_term  go to state 30
+    list_term      go to state 31
+    arg_list       go to state 74
+
+
+state 42
+
+   16 goal_list: goal_list . COMMA goal
+   17          | goal_list . SEMICOLON goal
+   24 goal: LPAREN goal_list . RPAREN
+
+    COMMA      shift, and go to state 50
+    SEMICOLON  shift, and go to state 51
+    RPAREN     shift, and go to state 75
+
+
+state 43
+
+   18 goal_list: goal .
+   25 goal: LPAREN goal . ARROW goal SEMICOLON goal RPAREN
+
+    ARROW  shift, and go to state 76
+
+    $default  reduce using rule 18 (goal_list)
+
+
+state 44
+
+   28 comparison_expr: term . OP_UNIFY term
+   29                | term . OP_NOT_UNIFY term
+   30                | term . OP_STRICT_EQ term
+   31                | term . OP_STRICT_NEQ term
+   32                | term . OP_LT term
+   33                | term . OP_GT term
+   34                | term . OP_LE term
+   35                | term . OP_GE term
+   36 arithmetic_expr: term . OP_IS term
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   52     | LPAREN term . RPAREN
+
+    RPAREN         shift, and go to state 77
+    OP_IS          shift, and go to state 52
+    OP_UNIFY       shift, and go to state 53
+    OP_NOT_UNIFY   shift, and go to state 54
+    OP_STRICT_EQ   shift, and go to state 55
+    OP_STRICT_NEQ  shift, and go to state 56
+    OP_LT          shift, and go to state 57
+    OP_GT          shift, and go to state 58
+    OP_LE          shift, and go to state 59
+    OP_GE          shift, and go to state 60
+    PLUS           shift, and go to state 61
+    MINUS          shift, and go to state 62
+    MULT           shift, and go to state 63
+    DIV            shift, and go to state 64
+    IDIV           shift, and go to state 65
+    MOD            shift, and go to state 66
+    POWER          shift, and go to state 67
+
+
+state 45
+
+   54 list_term: LBRACKET RBRACKET .
+
+    $default  reduce using rule 54 (list_term)
+
+
+state 46
+
+   55 list_term: LBRACKET arg_list . RBRACKET
+   56          | LBRACKET arg_list . PIPE term RBRACKET
+   57 arg_list: arg_list . COMMA term
+
+    COMMA     shift, and go to state 72
+    RBRACKET  shift, and go to state 78
+    PIPE      shift, and go to state 79
+
+
+state 47
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   51     | MINUS term .
+
+    $default  reduce using rule 51 (term)
+
+
+state 48
+
+   23 goal: NOT_OP goal .
+
+    $default  reduce using rule 23 (goal)
+
+
+state 49
+
+   12 directive: NECK body DOT .
+
+    $default  reduce using rule 12 (directive)
+
+
+state 50
+
+   16 goal_list: goal_list COMMA . goal
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal             go to state 80
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 51
+
+   17 goal_list: goal_list SEMICOLON . goal
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal             go to state 81
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 52
+
+   36 arithmetic_expr: term OP_IS . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 82
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 53
+
+   28 comparison_expr: term OP_UNIFY . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 83
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 54
+
+   29 comparison_expr: term OP_NOT_UNIFY . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 84
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 55
+
+   30 comparison_expr: term OP_STRICT_EQ . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 85
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 56
+
+   31 comparison_expr: term OP_STRICT_NEQ . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 86
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 57
+
+   32 comparison_expr: term OP_LT . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 87
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 58
+
+   33 comparison_expr: term OP_GT . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 88
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 59
+
+   34 comparison_expr: term OP_LE . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 89
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 60
+
+   35 comparison_expr: term OP_GE . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 90
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 61
+
+   44 term: term PLUS . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 91
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 62
+
+   45 term: term MINUS . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 92
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 63
+
+   46 term: term MULT . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 93
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 64
+
+   47 term: term DIV . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 94
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 65
+
+   48 term: term IDIV . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 95
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 66
+
+   49 term: term MOD . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 96
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 67
+
+   50 term: term POWER . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 97
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 68
+
+   11 query: QUERY_PREFIX body DOT .
+
+    $default  reduce using rule 11 (query)
+
+
+state 69
+
+   10 rule: head NECK body . DOT
+
+    DOT  shift, and go to state 98
+
+
+state 70
+
+   53 compound_term: ATOM LPAREN . arg_list RPAREN
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 39
+    compound_term  go to state 30
+    list_term      go to state 31
+    arg_list       go to state 99
+
+
+state 71
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   52     | LPAREN term . RPAREN
+
+    RPAREN  shift, and go to state 77
+    PLUS    shift, and go to state 61
+    MINUS   shift, and go to state 62
+    MULT    shift, and go to state 63
+    DIV     shift, and go to state 64
+    IDIV    shift, and go to state 65
+    MOD     shift, and go to state 66
+    POWER   shift, and go to state 67
+
+
+state 72
+
+   57 arg_list: arg_list COMMA . term
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 100
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 73
+
+   14 head: ATOM LPAREN arg_list RPAREN .
+
+    $default  reduce using rule 14 (head)
+
+
+state 74
+
+   27 simple_goal: ATOM LPAREN arg_list . RPAREN
+   53 compound_term: ATOM LPAREN arg_list . RPAREN
+   57 arg_list: arg_list . COMMA term
+
+    COMMA   shift, and go to state 72
+    RPAREN  shift, and go to state 101
+
+
+state 75
+
+   24 goal: LPAREN goal_list RPAREN .
+
+    $default  reduce using rule 24 (goal)
+
+
+state 76
+
+   25 goal: LPAREN goal ARROW . goal SEMICOLON goal RPAREN
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal             go to state 102
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 77
+
+   52 term: LPAREN term RPAREN .
+
+    $default  reduce using rule 52 (term)
+
+
+state 78
+
+   55 list_term: LBRACKET arg_list RBRACKET .
+
+    $default  reduce using rule 55 (list_term)
+
+
+state 79
+
+   56 list_term: LBRACKET arg_list PIPE . term RBRACKET
+
+    ATOM      shift, and go to state 37
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 38
+    LBRACKET  shift, and go to state 19
+    MINUS     shift, and go to state 21
+
+    term           go to state 103
+    compound_term  go to state 30
+    list_term      go to state 31
+
+
+state 80
+
+   16 goal_list: goal_list COMMA goal .
+
+    $default  reduce using rule 16 (goal_list)
+
+
+state 81
+
+   17 goal_list: goal_list SEMICOLON goal .
+
+    $default  reduce using rule 17 (goal_list)
+
+
+state 82
+
+   36 arithmetic_expr: term OP_IS term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 36 (arithmetic_expr)
+
+
+state 83
+
+   28 comparison_expr: term OP_UNIFY term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 28 (comparison_expr)
+
+
+state 84
+
+   29 comparison_expr: term OP_NOT_UNIFY term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 29 (comparison_expr)
+
+
+state 85
+
+   30 comparison_expr: term OP_STRICT_EQ term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 30 (comparison_expr)
+
+
+state 86
+
+   31 comparison_expr: term OP_STRICT_NEQ term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 31 (comparison_expr)
+
+
+state 87
+
+   32 comparison_expr: term OP_LT term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 32 (comparison_expr)
+
+
+state 88
+
+   33 comparison_expr: term OP_GT term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 33 (comparison_expr)
+
+
+state 89
+
+   34 comparison_expr: term OP_LE term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 34 (comparison_expr)
+
+
+state 90
+
+   35 comparison_expr: term OP_GE term .
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 35 (comparison_expr)
+
+
+state 91
+
+   44 term: term . PLUS term
+   44     | term PLUS term .
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 44 (term)
+
+
+state 92
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   45     | term MINUS term .
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 45 (term)
+
+
+state 93
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   46     | term MULT term .
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 46 (term)
+
+
+state 94
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   47     | term DIV term .
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 47 (term)
+
+
+state 95
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   48     | term IDIV term .
+   49     | term . MOD term
+   50     | term . POWER term
+
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 48 (term)
+
+
+state 96
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   49     | term MOD term .
+   50     | term . POWER term
+
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 49 (term)
+
+
+state 97
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   50     | term POWER term .
+
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 50 (term)
+
+
+state 98
+
+   10 rule: head NECK body DOT .
+
+    $default  reduce using rule 10 (rule)
+
+
+state 99
+
+   53 compound_term: ATOM LPAREN arg_list . RPAREN
+   57 arg_list: arg_list . COMMA term
+
+    COMMA   shift, and go to state 72
+    RPAREN  shift, and go to state 104
+
+
+state 100
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   57 arg_list: arg_list COMMA term .
+
+    PLUS   shift, and go to state 61
+    MINUS  shift, and go to state 62
+    MULT   shift, and go to state 63
+    DIV    shift, and go to state 64
+    IDIV   shift, and go to state 65
+    MOD    shift, and go to state 66
+    POWER  shift, and go to state 67
+
+    $default  reduce using rule 57 (arg_list)
+
+
+state 101
+
+   27 simple_goal: ATOM LPAREN arg_list RPAREN .
+   53 compound_term: ATOM LPAREN arg_list RPAREN .
+
+    DOT        reduce using rule 27 (simple_goal)
+    COMMA      reduce using rule 27 (simple_goal)
+    SEMICOLON  reduce using rule 27 (simple_goal)
+    RPAREN     reduce using rule 27 (simple_goal)
+    RPAREN     [reduce using rule 53 (compound_term)]
+    ARROW      reduce using rule 27 (simple_goal)
+    $default   reduce using rule 53 (compound_term)
+
+
+state 102
+
+   25 goal: LPAREN goal ARROW goal . SEMICOLON goal RPAREN
+
+    SEMICOLON  shift, and go to state 105
+
+
+state 103
+
+   44 term: term . PLUS term
+   45     | term . MINUS term
+   46     | term . MULT term
+   47     | term . DIV term
+   48     | term . IDIV term
+   49     | term . MOD term
+   50     | term . POWER term
+   56 list_term: LBRACKET arg_list PIPE term . RBRACKET
+
+    RBRACKET  shift, and go to state 106
+    PLUS      shift, and go to state 61
+    MINUS     shift, and go to state 62
+    MULT      shift, and go to state 63
+    DIV       shift, and go to state 64
+    IDIV      shift, and go to state 65
+    MOD       shift, and go to state 66
+    POWER     shift, and go to state 67
+
+
+state 104
+
+   53 compound_term: ATOM LPAREN arg_list RPAREN .
+
+    $default  reduce using rule 53 (compound_term)
+
+
+state 105
+
+   25 goal: LPAREN goal ARROW goal SEMICOLON . goal RPAREN
+
+    ATOM      shift, and go to state 13
+    VARIABLE  shift, and go to state 14
+    ANON_VAR  shift, and go to state 15
+    NUMBER    shift, and go to state 16
+    STRING    shift, and go to state 17
+    LPAREN    shift, and go to state 18
+    LBRACKET  shift, and go to state 19
+    CUT       shift, and go to state 20
+    MINUS     shift, and go to state 21
+    NOT_OP    shift, and go to state 22
+
+    goal             go to state 107
+    simple_goal      go to state 26
+    comparison_expr  go to state 27
+    arithmetic_expr  go to state 28
+    term             go to state 29
+    compound_term    go to state 30
+    list_term        go to state 31
+
+
+state 106
+
+   56 list_term: LBRACKET arg_list PIPE term RBRACKET .
+
+    $default  reduce using rule 56 (list_term)
+
+
+state 107
+
+   25 goal: LPAREN goal ARROW goal SEMICOLON goal . RPAREN
+
+    RPAREN  shift, and go to state 108
+
+
+state 108
+
+   25 goal: LPAREN goal ARROW goal SEMICOLON goal RPAREN .
+
+    $default  reduce using rule 25 (goal)
