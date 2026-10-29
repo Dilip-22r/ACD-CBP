@@ -1393,164 +1393,353 @@ HTML_TEMPLATE = r"""
         .ff-row .set { color: var(--text-2); word-break: break-word; }
         .ff-row .set b { color: var(--text-2); font-size: 9.5px; }
 
-        /* Tab 2: AST */
-        .ast-tree-scroll {
-            padding: 12px;
-            overflow-y: auto;
+        /* Tab 2: AST & Symbols */
+        .ast-toolbar {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .clause-tree-card {
-            background: var(--bg-inset);
-            border: 1px solid var(--border-soft);
-            border-radius: var(--radius-md);
-            padding: 10px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .clause-tree-card.flash {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-wash);
-        }
-
-        .clause-badge-row {
-            display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-raise);
+            border-bottom: 1px solid var(--border-soft);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .clause-idx {
+        .ast-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ast-title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-1);
+            letter-spacing: 0.3px;
+        }
+
+        .ast-meta-chip {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--bg-inset);
+            border: 1px solid var(--border-soft);
+            color: var(--text-2);
+        }
+
+        .ast-meta-chip.ok { background: var(--ok-wash); color: var(--ok); border-color: rgba(16, 185, 129, 0.3); }
+        .ast-meta-chip.warn { background: var(--warn-wash); color: var(--warn); border-color: rgba(245, 158, 11, 0.3); }
+
+        .ast-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ast-filter-group {
+            display: inline-flex;
+            background: var(--bg-inset);
+            padding: 2px;
+            border-radius: 6px;
+            border: 1px solid var(--border-soft);
+            gap: 2px;
+        }
+
+        .ast-filter-chip {
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 2.5px 8px;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+            color: var(--text-3);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .ast-filter-chip:hover { color: var(--text-1); }
+        .ast-filter-chip.on {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .ast-btn-group {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .ast-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 5px;
+            background: var(--bg-inset);
+            border: 1px solid var(--border-soft);
+            color: var(--text-2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .ast-action-btn:hover {
+            background: var(--bg-raise-2);
+            color: var(--text-1);
+            border-color: var(--border-strong);
+        }
+
+        .ast-tree-scroll {
+            padding: 12px 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-family: var(--font-mono);
+        }
+
+        .ast-tree-root {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ast-node {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ast-node-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            background: var(--bg-inset);
+            border: 1px solid var(--border-soft);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s;
+        }
+
+        .ast-node-header:hover {
+            background: var(--bg-raise);
+            border-color: var(--border-strong);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .ast-node-header.is-leaf {
+            cursor: default;
+        }
+
+        .ast-toggle-arrow {
+            font-size: 10px;
+            color: var(--text-3);
+            width: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s;
+        }
+
+        .ast-toggle-arrow-leaf {
+            font-size: 11px;
+            color: var(--text-3);
+            width: 12px;
+            text-align: center;
+            display: inline-block;
+            opacity: 0.5;
+        }
+
+        .ast-clause-num {
             font-family: var(--font-mono);
             font-size: 9px;
             font-weight: 700;
             color: var(--text-3);
-            border: 1px solid var(--border);
             background: var(--bg-inset-2);
-            border-radius: 4px;
-            padding: 2px 6px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 1px 5px;
         }
 
-        .clause-type {
-            font-size: 8.5px;
+        .ast-badge {
+            font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 2px 6px;
+            letter-spacing: 0.4px;
+            padding: 1.5px 5.5px;
             border-radius: 4px;
+            white-space: nowrap;
         }
 
-        .clause-type.fact { background: var(--info-wash); color: var(--info); }
-        .clause-type.rule { background: var(--accent-wash); color: var(--accent-soft); }
+        .ast-badge-program { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .ast-badge-fact { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .ast-badge-rule { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+        .ast-badge-head { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .ast-badge-neck { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .ast-badge-body { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
+        .ast-badge-compound { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .ast-badge-atom { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .ast-badge-var { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+        .ast-badge-num { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+        .ast-badge-list { background: rgba(20, 184, 166, 0.15); color: #2dd4bf; border: 1px solid rgba(20, 184, 166, 0.3); }
 
-        .clause-title {
-            font-family: var(--font-mono);
-            font-size: 11.5px;
+        .ast-node-name {
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-1);
+        }
+
+        .ast-arg-idx {
+            font-size: 9.5px;
+            color: var(--text-3);
+            font-style: italic;
+        }
+
+        .ast-node-sub {
+            font-size: 10px;
+            color: var(--text-3);
+            margin-left: 4px;
             flex: 1;
-            min-width: 0;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        .clause-line {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-3);
-        }
-
-        .terms-pill-flex {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .term-badge {
-            background: var(--bg-raise);
-            border: 1px solid var(--border-soft);
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-2);
-            padding: 2px 7px;
-            border-radius: 4px;
-        }
-
-        .term-badge b { color: var(--info); font-weight: 700; font-size: 9px; }
-
-        .ast-section-sep {
-            font-family: var(--font-mono);
-            font-size: 9.5px;
+        .ast-node-line {
+            font-size: 9px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
             color: var(--text-3);
-            padding: 8px 2px 0;
-            border-top: 1px dashed var(--border);
-            margin-top: 4px;
+            background: var(--bg-inset-2);
+            border: 1px solid var(--border-soft);
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-left: auto;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .sym-grid {
+        .ast-node-line:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-wash);
+        }
+
+        .ast-node-children {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            margin-left: 14px;
+            padding-left: 10px;
+            border-left: 1.5px solid var(--border-soft);
+            margin-top: 4px;
+            margin-bottom: 2px;
         }
 
-        .sym-row {
-            display: grid;
-            grid-template-columns: minmax(90px, auto) auto 1fr;
-            align-items: center;
-            gap: 10px;
-            font-family: var(--font-mono);
-            font-size: 11px;
+        .ast-node.collapsed > .ast-node-children {
+            display: none;
+        }
+
+        .ast-node.collapsed > .ast-node-header .ast-toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .ast-node.flash > .ast-node-header {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-wash);
+        }
+
+        /* Symbol Table & Diagnostics Card Sections */
+        .ast-card-section {
             background: var(--bg-inset);
             border: 1px solid var(--border-soft);
-            border-radius: 5px;
-            padding: 5px 9px;
-        }
-
-        .sym-row .sig { color: var(--text-1); font-weight: 700; }
-        .sym-row .counts { color: var(--text-3); font-size: 10px; white-space: nowrap; }
-        .sym-row .counts b.ok { color: var(--ok); }
-        .sym-row .counts b.ac { color: var(--accent-soft); }
-        .sym-row .lines {
-            color: var(--text-3);
-            font-size: 10px;
+            border-radius: var(--radius-md);
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-align: right;
+            margin-top: 10px;
         }
 
-        .diag-row {
+        .ast-card-header {
             display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            font-size: 11.5px;
-            line-height: 1.5;
-            padding: 4px 2px;
-            color: var(--text-2);
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-raise);
+            border-bottom: 1px solid var(--border-soft);
         }
 
-        .diag-pill {
-            font-size: 8px;
+        .ast-card-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .ast-sym-table-wrap {
+            overflow-x: auto;
+        }
+
+        .ast-sym-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+        }
+
+        .ast-sym-table th {
+            text-align: left;
+            padding: 6px 10px;
+            background: var(--bg-inset-2);
+            color: var(--text-3);
+            font-size: 9px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            flex-shrink: 0;
+            border-bottom: 1px solid var(--border-soft);
         }
 
-        .diag-pill.error { background: var(--bad-wash); color: var(--bad); }
-        .diag-pill.warning { background: var(--warn-wash); color: var(--warn); }
-        .diag-pill.info-c { background: var(--info-wash); color: var(--info); }
+        .ast-sym-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--border-soft);
+            color: var(--text-2);
+        }
+
+        .ast-sym-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ast-sym-table tr:hover td {
+            background: var(--bg-raise-2);
+        }
+
+        .ast-diag-body {
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ast-empty-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 20px;
+            text-align: center;
+            border: 1px dashed var(--border-soft);
+            border-radius: var(--radius-md);
+            background: var(--bg-inset);
+        }
         /* Tab 3: PDG */
         .pdg-canvas-wrapper {
             flex: 1;
@@ -2644,22 +2833,6 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
                     <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="5" r="3"/><circle cx="6" cy="19" r="3"/><circle cx="18" cy="19" r="3"/><path d="M12 8v4m0 0-6 4m6-4 6 4"/></svg>
                     <span class="preset-label">Family Tree</span>
                 </button>
-                <button class="preset-btn" data-key="graph_network" onclick="selectPreset('graph_network', this)" title="Directed network reachability and paths">
-                    <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="6" r="3"/><circle cx="19" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="m7.5 7.5 7 7M16.5 7.5l-7 7"/></svg>
-                    <span class="preset-label">Network Paths</span>
-                </button>
-                <button class="preset-btn" data-key="list_algorithms" onclick="selectPreset('list_algorithms', this)" title="List processing: member, append, reverse">
-                    <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                    <span class="preset-label">List Ops</span>
-                </button>
-                <button class="preset-btn" data-key="expr_evaluator" onclick="selectPreset('expr_evaluator', this)" title="Symbolic arithmetic and expression evaluation">
-                    <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
-                    <span class="preset-label">Evaluator</span>
-                </button>
-                <button class="preset-btn" data-key="nlp_expert" onclick="selectPreset('nlp_expert', this)" title="Massive 160+ Rules NLP Parser, Clinical Expert System & Degree Audit">
-                    <svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    <span class="preset-label">NLP & Expert (160+ Rules)</span>
-                </button>
             </div>
 
             <div class="header-actions">
@@ -2802,6 +2975,32 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
 
                     <!-- TAB 2: AST & SYMBOLS -->
                     <div id="tab-ast" class="tab-panel" role="tabpanel" aria-labelledby="btnTabAst">
+                        <div class="ast-toolbar">
+                            <div class="ast-stats-row">
+                                <span class="ast-title-badge">
+                                    <svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M12 6v4m0 0-5 6m5-6 5 6"/></svg>
+                                    Abstract Syntax Tree
+                                </span>
+                                <span id="astSummaryStats" class="ast-meta-chip">0 clauses</span>
+                            </div>
+                            <div class="ast-controls-row">
+                                <div class="ast-filter-group" role="group" aria-label="AST filter">
+                                    <button class="ast-filter-chip on" data-ast-filter="all" onclick="filterAstTree('all', this)">All</button>
+                                    <button class="ast-filter-chip" data-ast-filter="fact" onclick="filterAstTree('fact', this)">Facts</button>
+                                    <button class="ast-filter-chip" data-ast-filter="rule" onclick="filterAstTree('rule', this)">Rules</button>
+                                </div>
+                                <div class="ast-btn-group">
+                                    <button class="ast-action-btn" onclick="expandAllAstNodes()" title="Expand all tree branches">
+                                        <svg class="icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="7 11 12 6 17 11"/><polyline points="7 18 12 13 17 18"/></svg>
+                                        Expand
+                                    </button>
+                                    <button class="ast-action-btn" onclick="collapseAllAstNodes()" title="Collapse all tree branches">
+                                        <svg class="icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+                                        Collapse
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div id="astTreeList" class="ast-tree-scroll">
                             <p class="report-text">Run Analyze & Compile to build the syntax tree.</p>
                         </div>
@@ -3628,60 +3827,375 @@ X = john <span class="op">;</span> X = mary <span class="ok">SOLVED</span></div>
             box.innerHTML = html || '<div class="report-text">—</div>';
         }
 
+        /* ================= AST TREE & CONTROLS ================= */
+        function jumpToLine(lineNum) {
+            const ed = $editor();
+            if (!ed || !lineNum) return;
+            const lines = ed.value.split('\n');
+            let pos = 0;
+            for (let i = 0; i < Math.min(lineNum - 1, lines.length); i++) {
+                pos += lines[i].length + 1;
+            }
+            ed.focus();
+            const lineLen = lines[lineNum - 1] ? lines[lineNum - 1].length : 0;
+            ed.setSelectionRange(pos, pos + lineLen);
+            const lineHeight = 19;
+            ed.scrollTop = Math.max(0, (lineNum - 4) * lineHeight);
+            syncEditorScroll();
+        }
+
+        function toggleAstNode(headerEl) {
+            const parent = headerEl.parentElement;
+            if (parent && parent.classList.contains('ast-node-collapsible')) {
+                parent.classList.toggle('collapsed');
+            }
+        }
+
+        function expandAllAstNodes() {
+            document.querySelectorAll('.ast-node-collapsible').forEach(n => n.classList.remove('collapsed'));
+        }
+
+        function collapseAllAstNodes() {
+            document.querySelectorAll('.ast-clause-node').forEach(n => n.classList.add('collapsed'));
+        }
+
+        function filterAstTree(type, btn) {
+            document.querySelectorAll('.ast-filter-chip').forEach(b => b.classList.remove('on'));
+            if (btn) btn.classList.add('on');
+            document.querySelectorAll('.ast-clause-node').forEach(node => {
+                if (type === 'all') {
+                    node.style.display = 'flex';
+                } else {
+                    const cType = node.getAttribute('data-clause-type');
+                    node.style.display = (cType === type) ? 'flex' : 'none';
+                }
+            });
+        }
+
+        function formatCompoundPreview(term) {
+            if (!term) return '';
+            if (term.node_type === 'Atom') return `'${term.name}'`;
+            if (term.node_type === 'Variable') return term.name;
+            if (term.node_type === 'Number') return String(term.value);
+            if (term.node_type === 'ListTerm') {
+                const elems = (term.elements || []).map(formatCompoundPreview).join(', ');
+                return term.tail ? `[${elems} | ${formatCompoundPreview(term.tail)}]` : `[${elems}]`;
+            }
+            if (term.node_type === 'CompoundTerm' || term.functor) {
+                const args = (term.args || []).map(formatCompoundPreview).join(', ');
+                return `${term.functor}(${args})`;
+            }
+            return '';
+        }
+
+        function renderTermNode(term, argIndex) {
+            if (!term) return '';
+            const prefix = argIndex !== undefined ? `<span class="ast-arg-idx">arg${argIndex + 1}:</span> ` : '';
+            const type = term.node_type || (term.kind ? term.kind : 'Term');
+
+            if (type === 'CompoundTerm' || type === 'Compound') {
+                const hasArgs = term.args && term.args.length > 0;
+                const functorStr = term.functor ? `${escapeHtml(term.functor)}/${term.arity || term.args.length}` : escapeHtml(term.label || 'compound');
+                const preview = formatCompoundPreview(term);
+                const lineBadge = term.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${term.line});" title="Line ${term.line}">L${term.line}</span>` : '';
+                let html = `<div class="ast-node ast-node-collapsible">`
+                    + `<div class="ast-node-header ${hasArgs ? '' : 'is-leaf'}" ${hasArgs ? 'onclick="toggleAstNode(this)"' : ''}>`
+                    + (hasArgs ? '<span class="ast-toggle-arrow">▾</span>' : '<span class="ast-toggle-arrow-leaf">·</span>')
+                    + `<span class="ast-badge ast-badge-compound">Compound</span> `
+                    + prefix
+                    + `<span class="ast-node-name">${functorStr}</span>`
+                    + (preview ? `<span class="ast-node-sub">${escapeHtml(preview)}</span>` : '')
+                    + lineBadge
+                    + `</div>`;
+                if (hasArgs) {
+                    html += `<div class="ast-node-children">`;
+                    term.args.forEach((arg, i) => {
+                        html += renderTermNode(arg, i);
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+                return html;
+            } else if (type === 'Atom') {
+                const name = term.name || term.label || '';
+                return `<div class="ast-node">`
+                    + `<div class="ast-node-header is-leaf">`
+                    + `<span class="ast-toggle-arrow-leaf">·</span>`
+                    + `<span class="ast-badge ast-badge-atom">Atom</span> `
+                    + prefix
+                    + `<span class="ast-node-name" style="color:var(--ok)">'${escapeHtml(name)}'</span>`
+                    + (term.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${term.line});">L${term.line}</span>` : '')
+                    + `</div></div>`;
+            } else if (type === 'Variable') {
+                const name = term.name || term.label || '';
+                return `<div class="ast-node">`
+                    + `<div class="ast-node-header is-leaf">`
+                    + `<span class="ast-toggle-arrow-leaf">·</span>`
+                    + `<span class="ast-badge ast-badge-var">Variable</span> `
+                    + prefix
+                    + `<span class="ast-node-name" style="color:var(--warn)">${escapeHtml(name)}</span>`
+                    + (term.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${term.line});">L${term.line}</span>` : '')
+                    + `</div></div>`;
+            } else if (type === 'Number') {
+                const val = term.value !== undefined ? term.value : (term.label || '');
+                return `<div class="ast-node">`
+                    + `<div class="ast-node-header is-leaf">`
+                    + `<span class="ast-toggle-arrow-leaf">·</span>`
+                    + `<span class="ast-badge ast-badge-num">Number</span> `
+                    + prefix
+                    + `<span class="ast-node-name" style="color:var(--bad)">${escapeHtml(String(val))}</span>`
+                    + (term.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${term.line});">L${term.line}</span>` : '')
+                    + `</div></div>`;
+            } else if (type === 'ListTerm' || type === 'List') {
+                const elems = term.elements || [];
+                const hasChildren = elems.length > 0 || term.tail;
+                let html = `<div class="ast-node ast-node-collapsible">`
+                    + `<div class="ast-node-header ${hasChildren ? '' : 'is-leaf'}" ${hasChildren ? 'onclick="toggleAstNode(this)"' : ''}>`
+                    + (hasChildren ? '<span class="ast-toggle-arrow">▾</span>' : '<span class="ast-toggle-arrow-leaf">·</span>')
+                    + `<span class="ast-badge ast-badge-list">List</span> `
+                    + prefix
+                    + `<span class="ast-node-name">[${elems.length} elements]</span>`
+                    + (term.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${term.line});">L${term.line}</span>` : '')
+                    + `</div>`;
+                if (hasChildren) {
+                    html += `<div class="ast-node-children">`;
+                    elems.forEach((el, i) => {
+                        html += renderTermNode(el, i);
+                    });
+                    if (term.tail) {
+                        html += `<div class="ast-node"><div class="ast-node-header is-leaf"><span class="ast-badge ast-badge-list">Tail</span> ${renderTermNode(term.tail)}</div></div>`;
+                    }
+                    html += `</div>`;
+                }
+                html += `</div>`;
+                return html;
+            }
+            return '';
+        }
+
+        function renderClauseNode(clause, idx) {
+            const isFact = clause.node_type === 'Fact' || clause.type === 'Fact';
+            const isRule = clause.node_type === 'Rule' || clause.type === 'Rule';
+            const isQuery = clause.node_type === 'Query' || clause.type === 'Query';
+            const head = clause.head;
+            const line = clause.line || (head && head.line) || '?';
+
+            let functorStr = '';
+            if (typeof head === 'string') {
+                functorStr = head;
+            } else if (head && head.functor) {
+                functorStr = `${head.functor}/${head.arity || (head.args ? head.args.length : 0)}`;
+            } else {
+                functorStr = isQuery ? '?- query' : `clause_${idx + 1}`;
+            }
+
+            const badgeCls = isFact ? 'ast-badge-fact' : (isRule ? 'ast-badge-rule' : 'ast-badge-head');
+            const badgeText = isFact ? 'Fact' : (isRule ? 'Rule' : 'Query');
+
+            let headStr = (head && typeof head === 'object') ? formatCompoundPreview(head) : functorStr;
+            let ruleSummary = isRule ? `${headStr} :- ...` : (isFact ? headStr + '.' : `?- ${headStr}.`);
+
+            const collapsedClass = idx >= 5 ? 'collapsed' : '';
+
+            let html = `<div class="ast-node ast-node-collapsible ast-clause-node ${collapsedClass}" data-clause-type="${isFact ? 'fact' : (isRule ? 'rule' : 'query')}" id="clauseCard${idx + 1}">`
+                + `<div class="ast-node-header" onclick="toggleAstNode(this)">`
+                + `<span class="ast-toggle-arrow">▾</span>`
+                + `<span class="ast-clause-num">#${idx + 1}</span>`
+                + `<span class="ast-badge ${badgeCls}">${badgeText}</span>`
+                + `<span class="ast-node-name">${escapeHtml(functorStr)}</span>`
+                + `<span class="ast-node-sub">${escapeHtml(ruleSummary)}</span>`
+                + `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${line});" title="Click to view line ${line} in editor">L${line}</span>`
+                + `</div>`
+                + `<div class="ast-node-children">`;
+
+            if (head && typeof head === 'object') {
+                html += `<div class="ast-node ast-node-collapsible">`
+                    + `<div class="ast-node-header" onclick="toggleAstNode(this)">`
+                    + `<span class="ast-toggle-arrow">▾</span>`
+                    + `<span class="ast-badge ast-badge-head">Head</span>`
+                    + `<span class="ast-node-name">${escapeHtml(head.functor)}/${head.arity || (head.args ? head.args.length : 0)}</span>`
+                    + `<span class="ast-node-sub">${escapeHtml(formatCompoundPreview(head))}</span>`
+                    + `</div>`
+                    + `<div class="ast-node-children">`;
+                (head.args || []).forEach((a, i) => {
+                    html += renderTermNode(a, i);
+                });
+                html += `</div></div>`;
+            }
+
+            if (isRule) {
+                html += `<div class="ast-node">`
+                    + `<div class="ast-node-header is-leaf">`
+                    + `<span class="ast-toggle-arrow-leaf">·</span>`
+                    + `<span class="ast-badge ast-badge-neck">Neck</span>`
+                    + `<span class="ast-node-name">:-</span>`
+                    + `<span class="ast-node-sub">Clause body implication (conjunction ,)</span>`
+                    + `</div></div>`;
+
+                const bodyGoals = clause.body || [];
+                if (bodyGoals.length > 0) {
+                    html += `<div class="ast-node ast-node-collapsible">`
+                        + `<div class="ast-node-header" onclick="toggleAstNode(this)">`
+                        + `<span class="ast-toggle-arrow">▾</span>`
+                        + `<span class="ast-badge ast-badge-body">Body</span>`
+                        + `<span class="ast-node-name">${bodyGoals.length} Goal${bodyGoals.length === 1 ? '' : 's'}</span>`
+                        + `</div>`
+                        + `<div class="ast-node-children">`;
+
+                    bodyGoals.forEach((goal, gi) => {
+                        const goalFunctor = goal.functor ? `${goal.functor}/${goal.arity || (goal.args ? goal.args.length : 0)}` : `Goal ${gi + 1}`;
+                        html += `<div class="ast-node ast-node-collapsible">`
+                            + `<div class="ast-node-header" onclick="toggleAstNode(this)">`
+                            + `<span class="ast-toggle-arrow">▾</span>`
+                            + `<span class="ast-badge ast-badge-compound">Goal ${gi + 1}</span>`
+                            + `<span class="ast-node-name">${escapeHtml(goalFunctor)}</span>`
+                            + `<span class="ast-node-sub">${escapeHtml(formatCompoundPreview(goal))}</span>`
+                            + (goal.line ? `<span class="ast-node-line" onclick="event.stopPropagation(); jumpToLine(${goal.line});">L${goal.line}</span>` : '')
+                            + `</div>`
+                            + `<div class="ast-node-children">`;
+                        (goal.args || []).forEach((a, ai) => {
+                            html += renderTermNode(a, ai);
+                        });
+                        html += `</div></div>`;
+                    });
+                    html += `</div></div>`;
+                }
+            }
+
+            if (!head && clause.nodes && clause.nodes.length) {
+                html += `<div class="ast-node-children">`;
+                clause.nodes.forEach(n => {
+                    html += `<div class="ast-node"><div class="ast-node-header is-leaf">`
+                        + `<span class="ast-toggle-arrow-leaf">·</span>`
+                        + `<span class="ast-badge ast-badge-compound">${escapeHtml(n.kind)}</span> `
+                        + `<span class="ast-node-name">${escapeHtml(n.label)}</span>`
+                        + `</div></div>`;
+                });
+                html += `</div>`;
+            }
+
+            html += `</div></div>`;
+            return html;
+        }
+
         /* ================= AST + SYMBOL TABLE RENDERER ================= */
         function renderAST(data) {
             const list = document.getElementById('astTreeList');
+            const statsChip = document.getElementById('astSummaryStats');
+            const rawTree = data.ast_tree;
             const ag = data.ast_graph;
-            if (!ag || !ag.clauses) {
-                list.innerHTML = '<p class="report-text">No syntax tree — resolve errors first.</p>';
+            const clauses = (rawTree && rawTree.clauses) || (ag && ag.clauses) || [];
+
+            if (!clauses.length) {
+                if (data.errors && data.errors.length) {
+                    list.innerHTML = `<div class="ast-empty-card">`
+                        + `<div style="font-size: 26px; margin-bottom: 6px;">⚠️</div>`
+                        + `<div style="font-weight: 700; color: var(--text-1); font-size: 13px; margin-bottom: 4px;">Syntax Errors Detected</div>`
+                        + `<div style="color: var(--bad); font-size: 11px;">${escapeHtml(data.errors.join('; '))}</div>`
+                        + `</div>`;
+                } else {
+                    list.innerHTML = `<div class="ast-empty-card">`
+                        + `<div style="font-size: 24px; margin-bottom: 6px;">🌲</div>`
+                        + `<div style="font-weight: 700; color: var(--text-1); font-size: 13px;">No AST Available</div>`
+                        + `<div style="color: var(--text-3); font-size: 11px;">Enter Prolog clauses and click Analyze & Compile.</div>`
+                        + `</div>`;
+                }
+                if (statsChip) statsChip.textContent = '0 clauses';
                 return;
             }
 
-            let html = '';
-            ag.clauses.forEach(c => {
-                const pills = (c.nodes || []).map(n =>
-                    '<span class="term-badge"><b>' + escapeHtml(n.kind) + '</b> ' + escapeHtml(n.label) + '</span>').join('');
-                html += '<div class="clause-tree-card" id="clauseCard' + c.index + '">'
-                    + '<div class="clause-badge-row">'
-                    + '<span class="clause-idx">#' + c.index + '</span>'
-                    + '<span class="clause-type ' + (String(c.type).toLowerCase()) + '">' + escapeHtml(c.type) + '</span>'
-                    + '<span class="clause-title">' + escapeHtml(c.head) + '</span>'
-                    + '<span class="clause-line">L' + c.line + '</span>'
-                    + '</div>'
-                    + (pills ? '<div class="terms-pill-flex">' + pills + '</div>' : '')
-                    + '<div class="report-text" style="font-family:var(--font-mono);font-size:9.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(c.code) + '</div>'
-                    + '</div>';
+            let factsCnt = 0;
+            let rulesCnt = 0;
+            clauses.forEach(c => {
+                if (c.node_type === 'Fact' || c.type === 'Fact') factsCnt++;
+                else if (c.node_type === 'Rule' || c.type === 'Rule') rulesCnt++;
             });
 
+            if (statsChip) {
+                statsChip.textContent = `${clauses.length} clause${clauses.length === 1 ? '' : 's'} (${factsCnt}F, ${rulesCnt}R)`;
+            }
+
+            let html = `<div class="ast-tree-root">`;
+            // Root node: Program
+            html += `<div class="ast-node ast-node-collapsible">`
+                + `<div class="ast-node-header" onclick="toggleAstNode(this)">`
+                + `<span class="ast-toggle-arrow">▾</span>`
+                + `<span class="ast-badge ast-badge-program">Program Root</span>`
+                + `<span class="ast-node-name">Prolog Program</span>`
+                + `<span class="ast-node-sub">${clauses.length} clauses (${factsCnt} facts, ${rulesCnt} rules)</span>`
+                + `</div>`
+                + `<div class="ast-node-children">`;
+
+            clauses.forEach((c, idx) => {
+                html += renderClauseNode(c, idx);
+            });
+            html += `</div></div></div>`;
+
+            // Section 2: Symbol Table Card
             const sem = data.semantic || {};
             const st = sem.symbol_table || {};
             const sigs = Object.keys(st);
-            html += '<div class="ast-section-sep">Symbol table — ' + (sem.total_predicates || sigs.length) + ' predicate' + ((sem.total_predicates || sigs.length) === 1 ? '' : 's') + '</div>';
-            html += '<div class="sym-grid">';
-            sigs.forEach(sig => {
-                const s = st[sig];
-                html += '<div class="sym-row">'
-                    + '<span class="sig">' + escapeHtml(s.signature) + '</span>'
-                    + '<span class="counts"><b class="ok">' + s.facts + 'F</b> <span style="color:var(--text-3)">/</span> <b class="ac">' + s.rules + 'R</b></span>'
-                    + '<span class="lines">L' + (s.defined_at_lines || []).join(', L')
-                    + (s.callers && s.callers.length ? ' · called by ' + escapeHtml(s.callers.join(', ')) : '') + '</span>'
-                    + '</div>';
-            });
-            html += '</div>';
 
+            html += `<div class="ast-card-section">`
+                + `<div class="ast-card-header">`
+                + `<div class="ast-card-title">`
+                + `<svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+                + `Symbol Table`
+                + `</div>`
+                + `<span class="ast-meta-chip">${sem.total_predicates || sigs.length} Predicates</span>`
+                + `</div>`
+                + `<div class="ast-sym-table-wrap">`
+                + `<table class="ast-sym-table">`
+                + `<thead><tr><th>Predicate / Arity</th><th>Clauses</th><th>Defined Lines</th><th>Callers</th></tr></thead>`
+                + `<tbody>`;
+
+            if (!sigs.length) {
+                html += `<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:14px;">No symbols registered.</td></tr>`;
+            } else {
+                sigs.forEach(sig => {
+                    const s = st[sig];
+                    const lineLinks = (s.defined_at_lines || []).map(ln =>
+                        `<span class="ast-node-line" style="margin-left:0;display:inline-block;margin-right:3px;" onclick="event.stopPropagation(); jumpToLine(${ln});">L${ln}</span>`
+                    ).join(' ');
+                    const callersStr = (s.callers && s.callers.length) ? s.callers.join(', ') : '—';
+                    html += `<tr>`
+                        + `<td><span class="sig" style="color:var(--text-1);font-weight:700;">${escapeHtml(s.signature)}</span></td>`
+                        + `<td><b style="color:var(--ok)">${s.facts}F</b> <span style="color:var(--text-3)">/</span> <b style="color:var(--accent-soft)">${s.rules}R</b></td>`
+                        + `<td>${lineLinks || '—'}</td>`
+                        + `<td style="color:var(--text-3);font-size:10px;">${escapeHtml(callersStr)}</td>`
+                        + `</tr>`;
+                });
+            }
+            html += `</tbody></table></div></div>`;
+
+            // Section 3: Semantic Diagnostics Card
             const diags = sem.diagnostics || [];
-            html += '<div class="ast-section-sep">Semantic diagnostics — errors ' + (sem.errors_count || 0) + ' · warnings ' + (sem.warnings_count || 0) + '</div>';
+            html += `<div class="ast-card-section">`
+                + `<div class="ast-card-header">`
+                + `<div class="ast-card-title">`
+                + `<svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
+                + `Semantic Diagnostics`
+                + `</div>`
+                + `<span class="ast-meta-chip ${diags.length ? 'warn' : 'ok'}">${diags.length ? diags.length + ' notices' : 'Clean'}</span>`
+                + `</div>`
+                + `<div class="ast-diag-body">`;
+
             if (!diags.length) {
-                html += '<div class="diag-row"><span class="diag-pill info-c">clean</span><span>No semantic issues detected.</span></div>';
+                html += `<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ok);padding:4px 0;">`
+                    + `<svg class="icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`
+                    + `<span>All clear — no semantic anomalies or unbounded variables detected.</span>`
+                    + `</div>`;
             } else {
                 diags.forEach(d => {
                     const lvl = String(d.level || 'INFO').toUpperCase();
                     const pillCls = lvl === 'ERROR' ? 'error' : (lvl === 'WARNING' ? 'warning' : 'info-c');
-                    html += '<div class="diag-row"><span class="diag-pill ' + pillCls + '">' + escapeHtml(lvl) + '</span>'
-                        + '<span>' + escapeHtml(d.message)
-                        + ' <span class="dd" style="color:var(--text-3)">L' + (d.line || '?') + (d.code ? ' · ' + escapeHtml(d.code) : '') + '</span></span></div>';
+                    html += `<div class="diag-row"><span class="diag-pill ${pillCls}">${escapeHtml(lvl)}</span>`
+                        + `<span>${escapeHtml(d.message)} `
+                        + (d.line ? `<span class="ast-node-line" style="margin-left:4px;" onclick="event.stopPropagation(); jumpToLine(${d.line});">L${d.line}</span>` : '')
+                        + `</span></div>`;
                 });
             }
+            html += `</div></div>`;
 
             list.innerHTML = html;
             renderFirstFollow(data);
@@ -4426,6 +4940,7 @@ def api_compile():
         "tokens": [t.to_dict() for t in tokens],
         "errors": errors,
         "ast_graph": ast_graph,
+        "ast_tree": ast.to_dict() if ast is not None else None,
         "pdg": pdg,
         "semantic": semantic,
         "wam": wam,
